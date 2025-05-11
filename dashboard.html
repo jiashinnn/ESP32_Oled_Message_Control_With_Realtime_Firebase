@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Smart Noticeboard • Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 80px auto;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0c3fc;
+        }
+
+        h2 {
+            color: #6a0dad;
+            margin: 0;
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(106, 13, 173, 0.1);
+        }
+
+        .user-info {
+            color: #6a0dad;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #4a4a4a;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0c3fc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input:read-only {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #9b59b6;
+            box-shadow: 0 0 8px rgba(155, 89, 182, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+        }
+
+        #saveBtn {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        #logoutBtn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            text-align: center;
+            display: none;
+        }
+
+        .status.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .device-info {
+            background: rgba(155, 89, 182, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .device-info p {
+            margin: 5px 0;
+            color: #6a0dad;
+            font-size: 0.9em;
+        }
+
+        .device-info strong {
+            color: #4a4a4a;
+        }
+
+        .current-message-box {
+            background: rgba(46, 204, 113, 0.08);
+            border-left: 5px solid #6a0dad;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            margin-top: 8px;
+        }
+        .current-message-box strong {
+            color: #6a0dad;
+            font-size: 1em;
+        }
+        .current-message {
+            color: #222;
+            margin-top: 6px;
+            font-size: 1.08em;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2><span style="vertical-align: middle;"><i class="fas fa-chalkboard"></i> Control Panel</span></h2>
+            <p class="user-info" id="userEmail"><i class="fas fa-user-circle"></i></p>
+        </div>
+
+        <div class="device-info">
+            <p><i class="fas fa-microchip"></i> <strong>Device ID:</strong> <span id="deviceId"></span></p>
+            <p><i class="fas fa-clock"></i> <strong>Last Updated:</strong> <span id="lastUpdated"></span></p>
+            <div class="form-group">
+                <label for="updatedBy"><i class="fas fa-user-edit"></i> Updated By:</label>
+                <input type="text" id="updatedBy" placeholder="Enter updater's name or email" />
+            </div>
+        </div>
+
+        <div id="noticeForm">
+            <div class="form-group">
+                <label for="message">📢 Message:</label>
+                <textarea id="message" rows="4" placeholder="Enter your message here..."></textarea>
+            </div>
+
+            <div id="currentMessageBox" class="current-message-box">
+                <strong>Current Message:</strong>
+                <div id="currentMessage" class="current-message"></div>
+            </div>
+
+            <div class="button-group">
+                <button id="saveBtn"><i class="fas fa-save"></i> Save Message</button>
+                <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+
+        <div class="status" id="status">Message saved successfully!</div>
+    </div>
+
+    <!-- Firebase SDKs and Config -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase.js"></script>
+
+    <script>
+        const deviceId = '102/oled'; // matches your Firebase path
+        const message = document.getElementById('message');
+        const lastUpdated = document.getElementById('lastUpdated');
+        const updatedBy = document.getElementById('updatedBy');
+        const userEmail = document.getElementById('userEmail');
+        const saveBtn = document.getElementById('saveBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const deviceIdEl = document.getElementById('deviceId');
+        const status = document.getElementById('status');
+        const currentMessage = document.getElementById('currentMessage');
+
+        function showStatus(message) {
+            status.textContent = message;
+            status.classList.add('show');
+            setTimeout(() => status.classList.remove('show'), 3000);
+        }
+
+        auth.onAuthStateChanged(user => {
+            if (!user) return window.location = 'login.html';
+
+            userEmail.textContent = 'Logged in as: ' + user.email;
+            deviceIdEl.textContent = deviceId;
+
+            const ref = db.ref(deviceId);
+            ref.on('value', snap => {
+                const data = snap.val() || {};
+                message.value = data.message || '';
+                currentMessage.textContent = data.message || '(No message set)';
+                if (data.lastUpdated) {
+                    const date = new Date(Number(data.lastUpdated));
+                    lastUpdated.textContent = date.toLocaleString('en-MY', { timeZone: 'Asia/Kuala_Lumpur' });
+                } else {
+                    lastUpdated.textContent = 'Never';
+                }
+                updatedBy.value = data.updatedBy || '';
+            });
+
+            saveBtn.addEventListener('click', () => {
+                const now = Date.now();
+                ref.update({
+                    message: message.value.trim(),
+                    updatedBy: updatedBy.value.trim() || user.email,
+                    lastUpdated: now
+                }).then(() => {
+                    showStatus('Message saved successfully!');
+                }).catch(error => {
+                    showStatus('Error saving message: ' + error.message);
+                });
+            });
+
+            logoutBtn.addEventListener('click', () => {
+                auth.signOut().then(() => window.location = 'index.html');
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Smart Noticeboard • Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 400px;
+            margin: 80px auto;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            color: #6a0dad;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(106, 13, 173, 0.1);
+        }
+
+        .input-group {
+            position: relative;
+            margin: 10px 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0c3fc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .password-input {
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6a0dad;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #9b59b6;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #9b59b6;
+            box-shadow: 0 0 8px rgba(155, 89, 182, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            background: linear-gradient(45deg, #a29bfe, #6c5ce7);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #6a0dad;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #9b59b6;
+            text-decoration: underline;
+        }
+
+        .divider {
+            color: #6a0dad;
+            margin: 0 10px;
+        }
+
+        .password-requirements {
+            font-size: 0.85em;
+            color: #666;
+            margin: 5px 0 15px;
+            text-align: left;
+            padding: 0 5px;
+        }
+
+        .password-requirements ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        .password-requirements li {
+            margin: 3px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Create Account</h2>
+        <form id="registerForm">
+            <input type="email" id="email" placeholder="Email" required />
+            <div class="input-group">
+                <input type="password" id="password" class="password-input" placeholder="Password" required />
+                <i class="fas fa-eye toggle-password" onclick="togglePassword('password')"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="confirmPassword" class="password-input" placeholder="Confirm Password" required />
+                <i class="fas fa-eye toggle-password" onclick="togglePassword('confirmPassword')"></i>
+            </div>
+            <div class="password-requirements">
+                <p>Password must contain:</p>
+                <ul>
+                    <li>At least 6 characters</li>
+                    <li>Letters and numbers</li>
+                </ul>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p class="error" id="errMsg"></p>
+        <div class="links">
+            <p>
+                Already registered?
+                <a href="login.html">Login</a>
+                <span class="divider">|</span>
+                <a href="index.html">Home</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs and Config -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase.js"></script>
+
+    <script>
+        const emailEl = document.getElementById('email');
+        const passwordEl = document.getElementById('password');
+        const confirmPasswordEl = document.getElementById('confirmPassword');
+        const errMsg = document.getElementById('errMsg');
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            errMsg.textContent = '';
+            
+            if (passwordEl.value !== confirmPasswordEl.value) {
+                errMsg.textContent = 'Passwords do not match';
+                return;
+            }
+
+            try {
+                await auth.createUserWithEmailAndPassword(emailEl.value.trim(), passwordEl.value);
+                window.location = 'dashboard.html';
+            } catch (err) {
+                errMsg.textContent = err.message;
+            }
+        });
+    </script>
+</body>
+
+</html>

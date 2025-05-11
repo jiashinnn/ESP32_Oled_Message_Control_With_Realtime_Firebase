@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Assignment 2: IoT Credential & Data Display System (STTHK3113)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            font-family: 'Poppins', Arial, sans-serif;
+            background: #f9f7fc;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .hero {
+            position: relative;
+            background: linear-gradient(120deg, #fcb1b1 0%, #a1c4fd 100%);
+            min-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7vw;
+            overflow: hidden;
+        }
+        .hero-svg {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            z-index: 0;
+        }
+        .hero-content {
+            z-index: 1;
+            max-width: 520px;
+            text-align: left;
+        }
+        .hero-title {
+            font-size: 2.7rem;
+            font-weight: 700;
+            color: #2d1764;
+            margin-bottom: 18px;
+            letter-spacing: -1px;
+        }
+        .hero-desc {
+            font-size: 1.18rem;
+            color: #3a3a3a;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .hero-cta {
+            display: flex;
+            gap: 18px;
+        }
+        .hero-cta button {
+            padding: 13px 32px;
+            font-size: 1.05em;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #fff;
+            color: #f76d6d;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(247,109,109,0.08);
+        }
+        .hero-cta button:last-child {
+            background: #f76d6d;
+            color: #fff;
+        }
+        .hero-cta button:hover {
+            background: #ffe0e0;
+            color: #f76d6d;
+        }
+        .hero-illustration {
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .hero-illustration img {
+            width: 400px;
+            max-width: 48vw;
+            margin-right: 0px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-18px); }
+        }
+        .features-section {
+            margin: 0 auto;
+            max-width: 1100px;
+            padding: 60px 16px 0 16px;
+        }
+        .features-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #f76d6d;
+            text-align: center;
+            margin-bottom: 44px;
+        }
+        .features-zigzag {
+            display: flex;
+            flex-direction: column;
+            gap: 38px;
+        }
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            justify-content: center;
+        }
+        .feature-row.reverse {
+            flex-direction: row-reverse;
+        }
+        .feature-icon {
+            font-size: 2.7rem;
+            color: #a1c4fd;
+            background: #fff;
+            border-radius: 50%;
+            padding: 22px;
+            box-shadow: 0 2px 12px rgba(161,196,253,0.13);
+            margin: 0 10px;
+            transition: transform 0.2s;
+        }
+        .feature-row:hover .feature-icon {
+            transform: scale(1.12) rotate(-8deg);
+        }
+        .feature-info {
+            max-width: 400px;
+            text-align: left;
+        }
+        .feature-info h3 {
+            font-size: 1.18rem;
+            font-weight: 600;
+            color: #2d1764;
+            margin-bottom: 8px;
+        }
+        .feature-info p {
+            color: #4a4a4a;
+            font-size: 1.01em;
+            margin: 0;
+        }
+        .how-section {
+            background: #f6eaff;
+            margin-top: 70px;
+            padding: 60px 0 40px 0;
+        }
+        .how-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #a259e6;
+            text-align: center;
+            margin-bottom: 44px;
+            letter-spacing: -1px;
+        }
+        .how-cards {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+        .how-card {
+            background: #fff;
+            border-radius: 50%;
+            width: 220px;
+            height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 24px rgba(162,89,230,0.10);
+            margin: 0 10px;
+            position: relative;
+            transition: box-shadow 0.2s, transform 0.2s;
+            text-align: center;
+            padding: 0 18px;
+        }
+        .how-card:hover {
+            box-shadow: 0 8px 32px rgba(162,89,230,0.18);
+            transform: scale(1.05);
+        }
+        .how-card .icon {
+            font-size: 2.7rem;
+            color: #f76d6d;
+            margin-bottom: 12px;
+        }
+        .how-card h4 {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #6c2eb7;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+        .how-card p {
+            font-size: 1.05em;
+            color: #3a3a3a;
+            margin: 0;
+            font-weight: 400;
+        }
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                padding: 40px 4vw 0 4vw;
+                min-height: 520px;
+            }
+            .hero-content {
+                max-width: 100%;
+                text-align: center;
+            }
+            .hero-illustration {
+                justify-content: center;
+                margin-top: 30px;
+            }
+            .features-section {
+                padding-top: 36px;
+            }
+            .feature-row, .feature-row.reverse {
+                flex-direction: column;
+                gap: 18px;
+            }
+            .features-zigzag {
+                gap: 24px;
+            }
+            .how-cards {
+                gap: 24px;
+            }
+        }
+        .cta-section .cta-btns button:hover {
+            background: #ffe0e0;
+            color: #f76d6d;
+        }
+        .usecase-section {
+            background: #fff7e6;
+            padding: 48px 0 40px 0;
+        }
+        .usecase-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .usecase-icon {
+            font-size: 3.2rem;
+            color: #f76d6d;
+            background: #fdd7d7;
+            border-radius: 50%;
+            padding: 28px 32px;
+            box-shadow: 0 2px 12px rgba(247,109,109,0.08);
+            margin-bottom: 18px;
+        }
+        .usecase-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #d35400;
+            margin-bottom: 10px;
+        }
+        .usecase-desc {
+            font-size: 1.08rem;
+            color: #3a3a3a;
+            line-height: 1.7;
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-title">IoT Credential & Data Display System</div>
+            <div class="hero-desc">
+                A modern web app for <b>Assignment 2 (STTHK3113)</b>.<br>
+                Remotely manage your ESP32, WiFi credentials, and display messages in real time using Firebase and OLED.
+            </div>
+            <div class="hero-cta">
+                <button onclick="location.href='login.html'">Log In</button>
+                <button onclick="location.href='register.html'">Create Account</button>
+            </div>
+        </div>
+        <div class="hero-illustration">
+            <img src="https://cdni.iconscout.com/illustration/premium/thumb/iot-security-illustration-download-in-svg-png-gif-file-formats--wifi-logo-smart-building-automation-cyber-pack-illustrations-5829456.png" alt="IoT Illustration" />
+        </div>
+        <svg class="hero-svg" width="400" height="420" viewBox="0 0 400 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0L400 0V420L0 320V0Z" fill="#fff" fill-opacity="0.18"/>
+        </svg>
+    </section>
+
+    <section class="features-section">
+        <div class="features-title">Why Use This System?</div>
+        <div class="features-zigzag">
+            <div class="feature-row">
+                <div class="feature-icon"><i class="fas fa-broadcast-tower"></i></div>
+                <div class="feature-info">
+                    <h3>Live Device Monitoring</h3>
+                    <p>Instantly see your ESP32's status and messages on the OLED display, updated in real time from anywhere.</p>
+                </div>
+            </div>
+            <div class="feature-row reverse">
+                <div class="feature-icon"><i class="fas fa-sliders-h"></i></div>
+                <div class="feature-info">
+                    <h3>Remote Configuration</h3>
+                    <p>Change device settings, update messages, and manage credentials without physical access to the device.</p>
+                </div>
+            </div>
+            <div class="feature-row row">
+                <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                <div class="feature-info">
+                    <h3>Secure Access</h3>
+                    <p>Only authorized users can log in and control your IoT devices, thanks to Firebase Authentication.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-section">
+        <div class="how-title">How It Works</div>
+        <div class="how-cards">
+            <div class="how-card">
+                <div class="icon"><i class="fas fa-user-plus"></i></div>
+                <h4>Register</h4>
+                <p>Create your account to access the dashboard and device controls.</p>
+            </div>
+            <div class="how-card">
+                <div class="icon"><i class="fas fa-microchip"></i></div>
+                <h4>Connect Device</h4>
+                <p>Flash the ESP32, connect to WiFi, and link to Firebase for seamless data sync.</p>
+            </div>
+            <div class="how-card">
+                <div class="icon"><i class="fas fa-laptop-code"></i></div>
+                <h4>Control & Monitor</h4>
+                <p>Use the web app to update messages and monitor device status in real time.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="usecase-section">
+        <div class="usecase-container">
+            <div class="usecase-icon">
+                <i class="fas fa-chalkboard"></i>
+            </div>
+            <div style="flex:1; min-width:260px; text-align:left;">
+                <div class="usecase-title">Use Case Example: Smart Noticeboard System</div>
+                <div class="usecase-desc">
+                    Imagine a university or office with a digital noticeboard powered by ESP32 and an OLED display. Staff can log in to this web app from anywhere, update the announcement or schedule in Firebase, and the new message appears instantly on the noticeboard. No need for physical access or manual updates—everything is managed remotely, securely, and in real time.<br><br>
+                    <b>This system enables:</b>
+                    <ul style="margin:10px 0 0 18px; color:#6c2eb7;">
+                        <li>Centralized, remote control of public or private display boards</li>
+                        <li>Instant updates for announcements, events, or alerts</li>
+                        <li>Secure access—only authorized staff can change the message</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
