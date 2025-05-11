@@ -44,7 +44,9 @@ A complete end-to-end IoT noticeboard system using an ESP32, OLED display, EEPRO
 <details>
   <summary>Click to expand</summary>
 
-  ()
+  ![image](https://github.com/user-attachments/assets/44234089-7a54-4f05-bd1a-f86922e7de25)
+
+
   *Enter SSID, password & Device ID in the captive-portal UI.*  
 </details>
 
