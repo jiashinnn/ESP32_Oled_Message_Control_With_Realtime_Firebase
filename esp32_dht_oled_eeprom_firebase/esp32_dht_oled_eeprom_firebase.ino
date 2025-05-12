@@ -23,8 +23,8 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define credentialMaxLength 30 // max length for SSID/password/deviceId
 
 // ----- Firebase Setup -----
-#define API_KEY "API"
-#define DATABASE_URL "DATABASE"
+#define API_KEY "AIzaSyD56PY69dFpBk3BYlNBVg3xhuUvhXd1_6Q"
+#define DATABASE_URL "https://esp-firebase-demo-1aa72-default-rtdb.asia-southeast1.firebasedatabase.app/"
 #define FIREBASE_PATH "/102/oled"
 FirebaseAuth auth;
 FirebaseConfig config;
@@ -41,6 +41,8 @@ String scannedNetworks = "<p>Scanning networks...</p>";
 unsigned long lastUpdate = 0;
 const unsigned long interval = 2000;
 String firebasePath = FIREBASE_PATH;
+String message = "";
+String updatedBy = "";
 
 // ----- Setup -----
 void setup()
@@ -80,6 +82,11 @@ void setup()
         {
           Serial.println("Long press -> clear EEPROM");
           clearData();
+          ssid = "";
+          pass = "";
+          devid = "";
+          readData();
+          scanComplete = false;
           delay(500);
           ap_mode();
           return;
@@ -144,27 +151,57 @@ void loop()
     return;
   }
 
-  if (millis() - lastUpdate >= interval)
+  // … inside loop(), after you’ve fetched message, updatedBy, lastUpdated (ms) …
+  if (millis() - lastUpdate < interval)
+    return;
+  lastUpdate = millis();
+
+  // … after fetching `message` & `updatedBy` …
+  // Fetch 'message' from Firebase
+  if (Firebase.RTDB.getString(&fbdo, firebasePath + "/message"))
   {
-    lastUpdate = millis();
-    if (Firebase.RTDB.getString(&fbdo, String(FIREBASE_PATH) + "/message"))
+    if (fbdo.dataType() == "string")
     {
-      String msg = fbdo.stringData();
-      display.clearDisplay();
-      display.setCursor(0, 0);
-      display.println("Dev: " + devid);
-      display.println("Msg:" + msg);
-      display.display();
-    }
-    else
-    {
-      display.clearDisplay();
-      display.setCursor(0, 0);
-      display.println("FB Err:");
-      display.println(fbdo.errorReason());
-      display.display();
+      message = fbdo.stringData();
     }
   }
+  else
+  {
+    Serial.println("Failed to get message: " + fbdo.errorReason());
+  }
+
+  // Fetch 'updatedBy' from Firebase
+  if (Firebase.RTDB.getString(&fbdo, firebasePath + "/updatedBy"))
+  {
+    if (fbdo.dataType() == "string")
+    {
+      updatedBy = fbdo.stringData();
+    }
+  }
+  else
+  {
+    Serial.println("Failed to get updatedBy: " + fbdo.errorReason());
+  }
+
+  // 2) Clear & prep
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+
+  // 3) Line 1: Wi-Fi status + DevID
+  display.setCursor(0, 0);
+  display.print(WiFi.status() == WL_CONNECTED ? "WiFi OK" : "WiFi ERR");
+  display.print(" | ID:");
+  display.print(devid);
+
+  // 4) Line 2: Message + “By:” in one go
+  display.setCursor(0, 8);
+  display.print(message); // your Firebase text
+  display.print(" | By:");
+  display.print(updatedBy); // the name who updated it
+
+  // 5) Finally push it to the display
+  display.display();
 }
 
 // ----- WiFi Connection -----
