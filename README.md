@@ -1,4 +1,4 @@
-# ESP32 OLED Message Control
+# ESP32 OLED Message Control with Realtime Firebase
 
 A complete end-to-end IoT noticeboard system using an ESP32, OLED display, EEPROM, and Firebase Realtime Database.  Staff can log in to a web dashboard to update the message, and the ESP32 will display the latest text on its OLED in real time.
 
@@ -12,6 +12,7 @@ A complete end-to-end IoT noticeboard system using an ESP32, OLED display, EEPRO
 - **OLED Display** (SSD1306) shows:
   - Device ID
   - Current message
+  - Updated by 
 - **Responsive Web Dashboard** (HTML/CSS/JS) for staff to login/register, then update message  
 
 ---
