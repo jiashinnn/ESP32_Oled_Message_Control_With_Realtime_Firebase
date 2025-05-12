@@ -23,8 +23,8 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define credentialMaxLength 30 // max length for SSID/password/deviceId
 
 // ----- Firebase Setup -----
-#define API_KEY "AIzaSyD56PY69dFpBk3BYlNBVg3xhuUvhXd1_6Q"
-#define DATABASE_URL "https://esp-firebase-demo-1aa72-default-rtdb.asia-southeast1.firebasedatabase.app/"
+#define API_KEY "Api"
+#define DATABASE_URL "databaseURL"
 #define FIREBASE_PATH "/102/oled"
 FirebaseAuth auth;
 FirebaseConfig config;
